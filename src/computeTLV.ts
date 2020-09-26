@@ -1,20 +1,11 @@
-import type { AbiItem } from "web3-utils";
-import Web3 from "web3";
 import fetch from "node-fetch";
-import { ERC20Contract } from "./contracts/ethereum";
 import vaults from "./contracts/vaults";
-import vaultABI from "./contracts/ABIs/vault.json";
 import tokens from "./contracts/tokens";
 
 type CoingeckoAPIResponse = { [adress: string]: { usd: number } };
 
-export function getContracts(web3: Web3) {
-  return Object.entries(vaults).map(([token, { address }]) => {
-    const vaultContract = new web3.eth.Contract(
-      vaultABI as AbiItem[],
-      address
-    ) as ERC20Contract;
-    const decimals = vaultContract.methods.decimals().call();
+const contracts = Object.entries(vaults).map(([token, { contract }]) => {
+    const decimals = contract.methods.decimals().call();
     const tokenAddress = tokens[token].address;
     // const decimals = Promise.resolve(tokens[token].decimals);
     const getPrice = async () => {
@@ -36,14 +27,14 @@ export function getContracts(web3: Web3) {
 
     return {
       getPrice,
-      vaultContract,
+      vaultContract: contract,
       decimals,
       token,
     };
   });
-}
 
-type Contract = ReturnType<typeof getContracts>[0];
+
+type Contract = typeof contracts[0];
 
 async function getVaultTLV(contract: Contract) {
   const totalSupply = contract.vaultContract.methods
@@ -53,11 +44,11 @@ async function getVaultTLV(contract: Contract) {
   const price = contract.getPrice();
   const decimals = contract.decimals.then((res) => Number(res));
   const normalizedSupply = (await totalSupply) / 10 ** (await decimals); // Integer division, we are losing the decimals
-  console.log(contract.token, await totalSupply, normalizedSupply);
+  //console.log(contract.token, await totalSupply, normalizedSupply);
   return normalizedSupply * (await price);
 }
 
-export async function getTotalTLV(contracts: Contract[]) {
+export async function getTotalTLV() {
   const tlvs = await Promise.all(contracts.map(getVaultTLV));
   return tlvs.reduce((totalTLV, vaultTLV) => totalTLV + vaultTLV);
 }

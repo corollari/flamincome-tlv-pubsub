@@ -1,22 +1,14 @@
 // import redis from "redis";
-import Web3 from "web3";
 import WebSocket from "ws";
-import { getContracts, getTotalTLV } from "./computeTLV";
+import {web3ws} from './contracts/web3'
+import { getTotalTLV } from "./computeTLV";
+import computeAPYs from './computeAPYs'
+import express from 'express'
 
-// Project id should be hidden but whatever, I have a free account that is worthless
-const web3 = new Web3(
-  new Web3.providers.HttpProvider(
-    "https://mainnet.infura.io/v3/a94d8fec07d14f058824938b13ad64b3"
-  )
-);
-const web3ws = new Web3(
-  new Web3.providers.WebsocketProvider(
-    "wss://mainnet.infura.io/ws/v3/a94d8fec07d14f058824938b13ad64b3"
-  )
-);
-const contracts = getContracts(web3);
+const app = express()
+const server = app.listen(Number(process.env.PORT ?? '8080'));
 
-const wss = new WebSocket.Server({ port: Number(process.env.PORT ?? '8080') });
+const wss = new WebSocket.Server({ server, path:'/tlv'});
 function broadcast(message: any) {
   wss.clients.forEach((client) => {
     if (client.readyState === WebSocket.OPEN) {
@@ -26,12 +18,40 @@ function broadcast(message: any) {
 }
 
 let lastTLV: number = 0;
+let APYs: {
+  token: string;
+  percentageAPY: number;
+}[]
 wss.on("connection", (ws) => {
   ws.send(lastTLV);
 });
-getTotalTLV(contracts).then((tlv) => {
+app.get('/apy', (req, res) => {
+  res.send(APYs)
+})
+
+getTotalTLV().then((tlv) => {
   lastTLV = tlv;
 });
+async function updateAPYs(){
+  APYs = await computeAPYs()
+}
+updateAPYs()
+
+web3ws.eth
+  .subscribe("newBlockHeaders", (error) => {
+    if (error) {
+      console.error(error);
+    }
+  })
+  .on("data", () => {
+    console.log("new");
+    updateAPYs();
+    getTotalTLV().then((tlv) => {
+      lastTLV = tlv;
+      broadcast(tlv);
+    });
+  })
+  .on("error", console.error);
 
 /*
 const redisUrl = process.env.REDIS_URL;
@@ -48,18 +68,3 @@ redisClient.on("error", (error) => {
   console.error(error);
 });
 */
-
-web3ws.eth
-  .subscribe("newBlockHeaders", (error) => {
-    if (error) {
-      console.error(error);
-    }
-  })
-  .on("data", () => {
-    console.log("new");
-    getTotalTLV(contracts).then((tlv) => {
-      lastTLV = tlv;
-      broadcast(tlv);
-    });
-  })
-  .on("error", console.error);
