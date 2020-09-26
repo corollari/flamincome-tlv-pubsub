@@ -16,7 +16,7 @@ const web3ws = new Web3(
 );
 const contracts = getContracts(web3);
 
-const wss = new WebSocket.Server({ port: 8080 });
+const wss = new WebSocket.Server({ port: Number(process.env.PORT ?? '8080') });
 function broadcast(message: any) {
   wss.clients.forEach((client) => {
     if (client.readyState === WebSocket.OPEN) {
