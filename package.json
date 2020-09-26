@@ -1,0 +1,39 @@
+{
+  "name": "flamincome-tlv-alerts",
+  "private": true,
+  "version": "1.0.0",
+  "description": "",
+  "main": "build/index.js",
+  "scripts": {
+    "build": "tsc",
+    "lint": "eslint src --ext ts --no-ignore --fix && prettier --write \"src/**/*.ts\"",
+    "start": "node build/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "corollari",
+  "license": "MIT",
+  "dependencies": {
+    "@types/node-fetch": "^2.5.7",
+    "@types/redis": "^2.8.25",
+    "@types/ws": "^7.2.6",
+    "bn.js": "^5.1.3",
+    "node-fetch": "^2.6.1",
+    "redis": "^3.0.2",
+    "web3": "^1.2.11",
+    "ws": "^7.3.1"
+  },
+  "engines": {
+    "node": "12.x"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^3.9.0",
+    "@typescript-eslint/parser": "^3.9.0",
+    "eslint": "^7.7.0",
+    "eslint-config-airbnb-base": "^14.2.0",
+    "eslint-config-prettier": "^6.11.0",
+    "eslint-plugin-import": "^2.22.0",
+    "prettier": "^2.0.5",
+    "typescript": "^3.9.5"
+  }
+}

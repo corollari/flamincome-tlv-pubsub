@@ -1,0 +1,12 @@
+{
+  "name": "TLV change notifications for FlamIncome",
+  "description": "Pubsub bot that notifies you whenever FlamIncome's TLV changes",
+  "keywords": [
+    "flamincome"
+  ],
+
+  "repository": "https://github.com/corollari/flamincome-tlv-pubsub",
+  "addons": [
+    "heroku-redis:hobby-dev"
+  ]
+}
