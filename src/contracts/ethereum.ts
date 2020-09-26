@@ -2,7 +2,7 @@ type NumericalString = string;
 type Address = string;
 
 type ContractMethod<ReturnType> = {
-  call: (options?:{}, defaultBlock?:number) => Promise<ReturnType>;
+  call: (options?: {}, defaultBlock?: number) => Promise<ReturnType>;
 };
 
 interface ERC20Contract {
@@ -33,4 +33,4 @@ interface ExtraVaultContract {
   };
 }
 
-export type  VaultContract = ExtraVaultContract & ERC20Contract;
+export type VaultContract = ExtraVaultContract & ERC20Contract;

@@ -1,14 +1,14 @@
 // import redis from "redis";
 import WebSocket from "ws";
-import {web3ws} from './contracts/web3'
+import express from "express";
+import { web3ws } from "./contracts/web3";
 import { getTotalTLV } from "./computeTLV";
-import computeAPYs from './computeAPYs'
-import express from 'express'
+import computeAPYs from "./computeAPYs";
 
-const app = express()
-const server = app.listen(Number(process.env.PORT ?? '8080'));
+const app = express();
+const server = app.listen(Number(process.env.PORT ?? "8080"));
 
-const wss = new WebSocket.Server({ server, path:'/tlv'});
+const wss = new WebSocket.Server({ server, path: "/tlv" });
 function broadcast(message: any) {
   wss.clients.forEach((client) => {
     if (client.readyState === WebSocket.OPEN) {
@@ -21,21 +21,21 @@ let lastTLV: number = 0;
 let APYs: {
   token: string;
   percentageAPY: number;
-}[]
+}[];
 wss.on("connection", (ws) => {
   ws.send(lastTLV);
 });
-app.get('/apy', (req, res) => {
-  res.send(APYs)
-})
+app.get("/apy", (_, res) => {
+  res.send(APYs);
+});
 
 getTotalTLV().then((tlv) => {
   lastTLV = tlv;
 });
-async function updateAPYs(){
-  APYs = await computeAPYs()
+async function updateAPYs() {
+  APYs = await computeAPYs();
 }
-updateAPYs()
+updateAPYs();
 
 web3ws.eth
   .subscribe("newBlockHeaders", (error) => {

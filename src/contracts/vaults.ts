@@ -1,8 +1,8 @@
+import type { AbiItem } from "web3-utils";
 import deployedAddresses from "./deployedAddresses";
-import {web3} from './web3'
+import { web3 } from "./web3";
 import vaultABI from "./ABIs/vault.json";
 import { VaultContract } from "./ethereum";
-import type { AbiItem } from "web3-utils";
 
 export const tokens = [
   "USDT",
@@ -27,14 +27,14 @@ const vaults = tokens.reduce(
     ) as VaultContract;
     acc[token] = {
       address,
-      contract
+      contract,
     };
     return acc;
   },
   {} as {
     [token: string]: {
       address: string;
-      contract: VaultContract
+      contract: VaultContract;
     };
   }
 );
