@@ -4,8 +4,10 @@ import express from "express";
 import { web3ws } from "./contracts/web3";
 import { getTotalTLV } from "./computeTLV";
 import computeAPYs from "./computeAPYs";
+const cors = require('cors');
 
 const app = express();
+app.use(cors());
 const server = app.listen(Number(process.env.PORT ?? "8080"));
 
 const wss = new WebSocket.Server({ server, path: "/tlv" });
