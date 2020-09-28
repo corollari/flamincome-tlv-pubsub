@@ -6,6 +6,11 @@
   ],
 
   "repository": "https://github.com/corollari/flamincome-tlv-pubsub",
+  "env": {
+    "INFURA_TOKEN": {
+      "description": "Infura project ID"
+    }
+  },
   "addons": [
     "heroku-redis:hobby-dev"
   ]

@@ -12,11 +12,6 @@ module.exports = {
     'no-console': 'off',
     'import/prefer-default-export': 'off',
     'no-shadow':'off',
-    // Added to fix `aws-sdk` being in devDeps instead of Deps (in order to avoid including it in the pkgs)
-    "import/no-extraneous-dependencies": [
-      "error",
-      { "devDependencies": true }
-    ],
     // Fix problem that causes eslint to request that all importsinclude the extension, thus breaking them
     'import/extensions': [
       'error',
@@ -32,6 +27,8 @@ module.exports = {
     "no-await-in-loop": "off",
     // Disable rule. Rationale: code is much more readable when this rule is not enabled
     "prefer-destructuring": "off",
+	// Disable rule. Incompatible with some interfaces
+	"no-underscore-dangle": "off",
   },
   overrides: [
     {

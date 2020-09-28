@@ -1,10 +1,10 @@
-// import redis from "redis";
 import WebSocket from "ws";
 import express from "express";
 import { web3ws } from "./contracts/web3";
 import { getTotalTLV } from "./computeTLV";
 import computeAPYs from "./computeAPYs";
-const cors = require('cors');
+
+const cors = require("cors");
 
 const app = express();
 app.use(cors());
@@ -46,7 +46,7 @@ web3ws.eth
     }
   })
   .on("data", () => {
-    console.log("new");
+    console.log("new block");
     updateAPYs();
     getTotalTLV().then((tlv) => {
       lastTLV = tlv;
@@ -54,19 +54,3 @@ web3ws.eth
     });
   })
   .on("error", console.error);
-
-/*
-const redisUrl = process.env.REDIS_URL;
-
-let redisClient: redis.RedisClient;
-if (redisUrl === undefined) {
-  console.log("Using a local version of redis, as 'REDIS_URL' was not found");
-  redisClient = redis.createClient();
-} else {
-  redisClient = redis.createClient(redisUrl);
-}
-// For debugging purposes
-redisClient.on("error", (error) => {
-  console.error(error);
-});
-*/
