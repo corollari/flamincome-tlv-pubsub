@@ -7,7 +7,7 @@ function pow10(power: number) {
 }
 
 const precision = 4;
-const blocksPerDay = 127; // Assumes 15-sec block times
+const blocksPerDay = 120; // Assumes 15-sec block times
 export default async function computeAllAPYs() {
   const APYs = Object.entries(vaults).map(async ([token, { contract }]) => {
     // Minus one to ensure that the block will be available for getBlock()
