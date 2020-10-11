@@ -27,8 +27,9 @@ module.exports = {
     "no-await-in-loop": "off",
     // Disable rule. Rationale: code is much more readable when this rule is not enabled
     "prefer-destructuring": "off",
-	// Disable rule. Incompatible with some interfaces
-	"no-underscore-dangle": "off",
+    // Disable rule. Incompatible with some interfaces
+    "no-underscore-dangle": "off",
+    "consistent-return": "off",
   },
   overrides: [
     {

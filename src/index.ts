@@ -31,14 +31,22 @@ app.get("/apy", (_, res) => {
   res.send(APYs);
 });
 
-getTotalTLV().then((tlv) => {
-  lastTLV = tlv;
-}).catch(console.log)
+async function updateTLV() {
+  try {
+    lastTLV = await getTotalTLV();
+    console.log(lastTLV);
+    return lastTLV;
+  } catch (e) {
+    console.log(e.message);
+  }
+}
+updateTLV();
 async function updateAPYs() {
-  try{
+  try {
     APYs = await computeAPYs();
-  } catch(e){
-    console.log(e)
+    console.log(APYs);
+  } catch (e) {
+    console.log(e.message);
   }
 }
 updateAPYs();
@@ -52,9 +60,8 @@ web3ws.eth
   .on("data", () => {
     console.log("new block");
     updateAPYs();
-    getTotalTLV().then((tlv) => {
-      lastTLV = tlv;
+    updateTLV().then((tlv) => {
       broadcast(tlv);
-    }).catch(console.log)
+    });
   })
   .on("error", console.error);
