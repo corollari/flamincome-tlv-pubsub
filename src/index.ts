@@ -33,9 +33,13 @@ app.get("/apy", (_, res) => {
 
 getTotalTLV().then((tlv) => {
   lastTLV = tlv;
-});
+}).catch(console.log)
 async function updateAPYs() {
-  APYs = await computeAPYs();
+  try{
+    APYs = await computeAPYs();
+  } catch(e){
+    console.log(e)
+  }
 }
 updateAPYs();
 
@@ -51,6 +55,6 @@ web3ws.eth
     getTotalTLV().then((tlv) => {
       lastTLV = tlv;
       broadcast(tlv);
-    });
+    }).catch(console.log)
   })
   .on("error", console.error);
