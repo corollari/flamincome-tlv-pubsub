@@ -14,6 +14,7 @@ Just establish a connection to the websockets URL and you'll start receiving mes
 ## Development
 This project uses the standards widely known on the javascript community:
 ```
+export ALCHEMY_TOKEN="XXXXXXX"
 npm install # Install dependencies
 npm run build # Compile typescript code
 npm run lint # Lint & format code
